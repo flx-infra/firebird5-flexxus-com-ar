@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  firebird:
+    image: firebirdsql/firebird:5.0.2
+    environment:
+      - ISC_PASSWORD=3122414422
+    volumes:
+      - firebird_data:/firebird/data   
+    networks:
+      - traefik
+    deploy:
+      placement:
+        constraints: ["${NODE}"]  
+      restart_policy:
+        condition: any
+    ports:
+      - "3051:3050"    
+    logging:
+      driver: loki
+      options:
+        loki-url: ${LOKI_URL}  
+
+  sftp:
+    image: atmoz/sftp
+    volumes:
+      - firebird_data:/home/sftp-user/firebird-data  
+    ports:
+      - "2223:22"
+    command: "sftp-user:admin:1001:1001:firebird-data"
+    deploy:
+      placement:
+        constraints: ["${NODE}"]      
+    restart: unless-stopped
+    
+volumes:
+  firebird_data:
+    driver: local
+    name: "${SERVICE_NAME}_firebird_data"
+networks:
+  traefik:
+    external:
+      name: traefik    
