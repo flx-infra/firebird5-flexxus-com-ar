@@ -12,8 +12,6 @@ services:
     deploy:
       placement:
         constraints: ["${NODE}"]  
-      restart_policy:
-        condition: any
     ports:
       - "3051:3050"    
     logging:
