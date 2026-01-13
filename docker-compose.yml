@@ -37,5 +37,5 @@ volumes:
     name: "${SERVICE_NAME}_firebird_data"
 networks:
   traefik:
-    external:
-      name: traefik    
+    external: true
+    name: traefik    
