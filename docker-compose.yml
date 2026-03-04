@@ -21,11 +21,17 @@ services:
 
   sftp:
     image: atmoz/sftp
+    user: "0:0"
     volumes:
       - firebird_data:/home/sftp-user/firebird-data  
     ports:
       - "2223:22"
-    command: "sftp-user:admin:1001:1001:firebird-data"
+    command: >
+    sh -lc "
+      chown -R 1001:1001 /home/sftp-user/firebird-data || true;
+      chmod -R u+rwX,g+rwX /home/sftp-user/firebird-data || true;
+      /entrypoint sftp-user:admin:1001:1001:firebird-data
+    "
     deploy:
       placement:
         constraints: ["${NODE}"]      
