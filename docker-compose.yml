@@ -7,6 +7,7 @@ services:
       - ISC_PASSWORD=3122414422
     volumes:
       - firebird_data:/firebird/data   
+      - /opt/firebird5/firebird.conf:/opt/firebird/firebird.conf:ro
     networks:
       - traefik
     deploy:
